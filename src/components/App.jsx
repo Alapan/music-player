@@ -1,12 +1,16 @@
 import React from 'react';
 import PlayPauseButton from './PlayPauseButton.jsx';
-const $ = require('jquery');
+import ProgressBar from './ProgressBar.jsx';
 
 export default class App extends React.Component {
 
   constructor() {
     super();
     this.playAudioFile = this.playAudioFile.bind(this);
+    this.calculateProgress = this.calculateProgress.bind(this);
+    this.state = {
+      progressValue: 0
+    };
   }
 
   componentDidMount() {
@@ -36,11 +40,26 @@ export default class App extends React.Component {
     }
   }
 
+  calculateProgress(e) {
+    const elem = e.currentTarget;
+    const percent = Math.floor((elem.currentTime / elem.duration) * 100);
+    this.setState({
+      progressValue: percent
+    });
+  }
+
   render() {
     return (
       <div>
         <PlayPauseButton playAudioFile={this.playAudioFile}/>
-        <audio src='audio/cast_your_fate_to_the_wind.mp3' type='audio/mpeg'></audio>
+        <audio
+          src='audio/cast_your_fate_to_the_wind.mp3'
+          type='audio/mpeg'
+          onTimeUpdate={this.calculateProgress}
+        >
+        </audio>
+        <ProgressBar progressValue={this.state.progressValue}>
+        </ProgressBar>
       </div>
     )
   }
