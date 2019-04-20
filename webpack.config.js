@@ -1,6 +1,6 @@
 var path = require('path');
 
-var SRC_DIR = path.resolve(__dirname + '/src/js');
+var SRC_DIR = path.resolve(__dirname + '/src/client/js');
 var DEST_DIR = path.resolve(__dirname + '/build');
 
 module.exports = {
@@ -37,9 +37,15 @@ module.exports = {
         test: /\.scss$/,
         use: [
           'style-loader', // creates style nodes from JS strings
-          'css-loader', // translates CSS into CommonJS
-          'sass-loader' // compiles Sass to CSS, using Node Sass by default
+          'css-loader' // translates CSS into CommonJS
         ]
+      },
+      {
+        test: /\.scss$/,
+        loader: 'sass-loader',
+        options: {
+          implementation: require('sass')
+        }
       }
     ]
   }
