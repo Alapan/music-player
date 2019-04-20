@@ -1,6 +1,7 @@
 import React from 'react';
 import PlayPauseButton from './PlayPauseButton.jsx';
 import ProgressBar from './ProgressBar.jsx';
+import SearchBox from './SearchBox.jsx';
 
 export default class App extends React.Component {
 
@@ -50,7 +51,8 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className='container'>
+        <SearchBox />
         <PlayPauseButton playAudioFile={this.playAudioFile}/>
         <audio
           src='audio/cast_your_fate_to_the_wind.mp3'
