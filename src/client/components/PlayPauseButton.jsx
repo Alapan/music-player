@@ -31,7 +31,7 @@ export default class PlayPauseButton extends React.Component {
       <div className='controls' onClick={this.changeButton}>
         <i className={cls}></i>
       </div>
-    )
+    );
   }
 }
 
