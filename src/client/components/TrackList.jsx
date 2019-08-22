@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import $ from 'jquery';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
@@ -9,6 +10,15 @@ import Paper from '@material-ui/core/Paper';
 import '../scss/TrackList.scss';
 
 export default class TrackList extends React.Component {
+
+  constructor() {
+    super();
+    this.onRowClick = this.onRowClick.bind(this);
+  }
+
+  onRowClick(name) {
+    this.props.setCurrentTrack(name);
+  }
 
   render() {
     return (
@@ -24,7 +34,11 @@ export default class TrackList extends React.Component {
           <TableBody>
             {
               this.props.musicFiles.map(({name, artist, duration}, i) => (
-                <TableRow key={i}>
+                <TableRow
+                  key={i}
+                  onClick={() => this.onRowClick(name)}
+                  className='table-row'
+                >
                   <TableCell align='left'>{name}</TableCell>
                   <TableCell align='left'>{artist}</TableCell>
                   <TableCell align='left'>{duration}</TableCell>
@@ -39,6 +53,6 @@ export default class TrackList extends React.Component {
 }
 
 TrackList.propTypes = {
-  musicFiles: PropTypes.array.isRequired
+  musicFiles: PropTypes.array.isRequired,
+  setCurrentTrack: PropTypes.func
 };
-
