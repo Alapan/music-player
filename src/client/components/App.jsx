@@ -10,9 +10,11 @@ export default class App extends React.Component {
     super();
     this.playAudioFile = this.playAudioFile.bind(this);
     this.calculateProgress = this.calculateProgress.bind(this);
+    this.setCurrentTrack = this.setCurrentTrack.bind(this);
     this.state = {
       progressValue: 0,
-      musicFiles: []
+      musicFiles: [],
+      currentTrack: {}
     };
   }
 
@@ -60,9 +62,19 @@ export default class App extends React.Component {
 
   calculateProgress(e) {
     const elem = e.currentTarget;
-    const percent = Math.floor((elem.currentTime / elem.duration) * 100);
+    let percent = Math.floor((elem.currentTime / elem.duration) * 100);
+    if (Number.isNaN(percent)) {
+      percent = 0
+    };
+
     this.setState({
       progressValue: percent
+    });
+  }
+
+  setCurrentTrack(name) {
+    this.setState({
+      currentTrack: `audio/${name}`
     });
   }
 
@@ -71,14 +83,17 @@ export default class App extends React.Component {
       <div className='container'>
         <PlayPauseButton playAudioFile={this.playAudioFile}/>
         <audio
-          src='audio/cast_your_fate_to_the_wind.mp3'
+          src={this.state.currentTrack}
           type='audio/mpeg'
           onTimeUpdate={this.calculateProgress}
         >
         </audio>
         <ProgressBar progressValue={this.state.progressValue}>
         </ProgressBar>
-        <TrackList musicFiles={this.state.musicFiles} />
+        <TrackList
+          musicFiles={this.state.musicFiles}
+          setCurrentTrack={this.setCurrentTrack}
+        />
       </div>
     )
   }
