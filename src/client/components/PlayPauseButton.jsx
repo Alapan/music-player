@@ -18,6 +18,47 @@ export default class PlayPauseButton extends React.Component {
     });
   }
 
+  componentDidMount() {
+    this.createAudioContext();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.currentTrack !== this.props.currentTrack) {
+      this.setState({
+        playAudio: true
+      });
+    }
+  }
+
+  createAudioContext() {
+    this.audioContext = new (window.AudioContext ||
+      window.webkitAudioContext)();
+    this.audioElement = document.querySelector('audio');
+    const track = this.audioContext.createMediaElementSource(
+      this.audioElement
+    );
+    this.gainNode = this.audioContext.createGain();
+    this.props.setGainNode(this.gainNode);
+    track.connect(this.gainNode).connect(this.audioContext.destination);
+  }
+
+  playAudioFile(playAudio) {
+    if (!this.audioContext) {
+      return;
+    }
+
+    // check if context is in suspended state (autoplay policy)
+    if (this.audioContext.state === 'suspended') {
+      this.audioContext.resume();
+    }
+
+    if (!playAudio) {
+      this.audioElement.pause();
+    } else {
+      this.audioElement.play();
+    }
+  }
+
   render() {
     let cls = '';
     if (this.state.playAudio) {
@@ -25,7 +66,7 @@ export default class PlayPauseButton extends React.Component {
     } else {
       cls = 'far fa-play-circle fa-4x';
     }
-    this.props.playAudioFile(this.state.playAudio);
+    this.playAudioFile(this.state.playAudio);
 
     return (
       <div className='controls' onClick={this.changeButton}>
@@ -36,5 +77,6 @@ export default class PlayPauseButton extends React.Component {
 }
 
 PlayPauseButton.propTypes = {
-  playAudioFile: PropTypes.func.isRequired
+  currentTrack: PropTypes.string,
+  setGainNode: PropTypes.func.isRequired
 };
